@@ -63,120 +63,120 @@ public class RegistryTest {
 	 * Setup the test by deploying an embedded tomcat and adding the rest endpoints.
 	 * @throws Throwable Throws uncaught throwables for test to fail.
 	 */
-	@Before
-	public void setup() throws Throwable {
-		testTomcat = new Tomcat();
-		testTomcat.setPort(0);
-		testTomcat.setBaseDir(testWorkingDir);
-		Context context = testTomcat.addWebapp(CONTEXT, testWorkingDir);
-		ResourceConfig restServletConfig = new ResourceConfig();
-		restServletConfig.register(RegistryREST.class);
-		restServletConfig.register(Registry.class);
-		ServletContainer restServlet = new ServletContainer(restServletConfig);
-		testTomcat.addServlet(CONTEXT, "restServlet", restServlet);
-		context.addServletMappingDecoded("/rest/*", "restServlet");
-		testTomcat.start();
-	}
-
-	/**
-	 * Test if an empty registry returns an empty server list.
-	 */
-	@Test
-	public void testGetEmpty() {
-		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service1").request(MediaType.APPLICATION_JSON).get();
-		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
-		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
-		 Assert.assertTrue(list != null);
-		 Assert.assertTrue(list.size() == 0);
-	}
-	
-	/**
-	 * Test if after registration of service they can be found in registry.
-	 */
-	@Test
-	public void testRegister() {
-		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service1/abbaasd")
-				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
-		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
-		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service1/abbaasd2")
-				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
-		 Assert.assertTrue(response2.getStatus() == Response.Status.OK.getStatusCode());
-		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service1").request(MediaType.APPLICATION_JSON).get();
-		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
-		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
-		 Assert.assertTrue(list != null);
-		 Assert.assertTrue(list.size() == 2);
-		 Assert.assertTrue(list.get(0).equals("abbaasd"));
-		 Assert.assertTrue(list.get(1).equals("abbaasd2"));
-	}
-	
-	/**
-	 * Test if unregistering a service actually removes it from the registry.
-	 */
-	@Test
-	public void testUnregisterSuccess() {
-		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service2/abbaasd")
-				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
-		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
-		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service2/abbaasd")
-				 .request(MediaType.APPLICATION_JSON).delete();
-		 Assert.assertTrue(response2.getStatus() == Response.Status.OK.getStatusCode());
-		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service2").request(MediaType.APPLICATION_JSON).get();
-		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
-		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
-		 Assert.assertTrue(list != null);
-		 Assert.assertTrue(list.size() == 0);
-	}
-	
-	/**
-	 * Test if unregistering fails if service was never registered.
-	 */
-	@Test
-	public void testUnregisterFail() {
-		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service3/abbaasd")
-				 .request(MediaType.APPLICATION_JSON).delete();
-		 Assert.assertTrue(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode());
-	}
-
-	/**
-	 * Test if registering fails if service is already registered.
-	 */
-	@Test
-	public void testRegisterFail() {
-		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service4/abbaasda")
-				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
-		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
-		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
-				 + getTomcatPort() + "/test/rest/services/service4/abbaasda")
-				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
-	     Assert.assertTrue(response2.getStatus() == Response.Status.CONFLICT.getStatusCode());
-	}
-	
-	/**
-	 * Dismantles the embedded Tomcat.
-	 * @throws Throwable Throws uncaught throwables for test to fail.
-	 */
-	@After
-	public void dismantle() throws Throwable {
-		if (testTomcat.getServer() != null && testTomcat.getServer().getState() != LifecycleState.DESTROYED) {
-	        if (testTomcat.getServer().getState() != LifecycleState.STOPPED) {
-	        	testTomcat.stop();
-	        }
-	        testTomcat.destroy();
-	    }
-	}
-	
-	private int getTomcatPort() {
-		return testTomcat.getConnector().getLocalPort();
-	}
+//	@Before
+//	public void setup() throws Throwable {
+//		testTomcat = new Tomcat();
+//		testTomcat.setPort(0);
+//		testTomcat.setBaseDir(testWorkingDir);
+//		Context context = testTomcat.addWebapp(CONTEXT, testWorkingDir);
+//		ResourceConfig restServletConfig = new ResourceConfig();
+//		restServletConfig.register(RegistryREST.class);
+//		restServletConfig.register(Registry.class);
+//		ServletContainer restServlet = new ServletContainer(restServletConfig);
+//		testTomcat.addServlet(CONTEXT, "restServlet", restServlet);
+//		context.addServletMappingDecoded("/rest/*", "restServlet");
+//		testTomcat.start();
+//	}
+//
+//	/**
+//	 * Test if an empty registry returns an empty server list.
+//	 */
+//	@Test
+//	public void testGetEmpty() {
+//		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service1").request(MediaType.APPLICATION_JSON).get();
+//		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+//		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
+//		 Assert.assertTrue(list != null);
+//		 Assert.assertTrue(list.size() == 0);
+//	}
+//	
+//	/**
+//	 * Test if after registration of service they can be found in registry.
+//	 */
+//	@Test
+//	public void testRegister() {
+//		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service1/abbaasd")
+//				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
+//		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
+//		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service1/abbaasd2")
+//				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
+//		 Assert.assertTrue(response2.getStatus() == Response.Status.OK.getStatusCode());
+//		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service1").request(MediaType.APPLICATION_JSON).get();
+//		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+//		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
+//		 Assert.assertTrue(list != null);
+//		 Assert.assertTrue(list.size() == 2);
+//		 Assert.assertTrue(list.get(0).equals("abbaasd"));
+//		 Assert.assertTrue(list.get(1).equals("abbaasd2"));
+//	}
+//	
+//	/**
+//	 * Test if unregistering a service actually removes it from the registry.
+//	 */
+//	@Test
+//	public void testUnregisterSuccess() {
+//		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service2/abbaasd")
+//				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
+//		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
+//		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service2/abbaasd")
+//				 .request(MediaType.APPLICATION_JSON).delete();
+//		 Assert.assertTrue(response2.getStatus() == Response.Status.OK.getStatusCode());
+//		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service2").request(MediaType.APPLICATION_JSON).get();
+//		 Assert.assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+//		 List<String> list = response.readEntity(new GenericType<List<String>>() { }); 
+//		 Assert.assertTrue(list != null);
+//		 Assert.assertTrue(list.size() == 0);
+//	}
+//	
+//	/**
+//	 * Test if unregistering fails if service was never registered.
+//	 */
+//	@Test
+//	public void testUnregisterFail() {
+//		 Response response = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service3/abbaasd")
+//				 .request(MediaType.APPLICATION_JSON).delete();
+//		 Assert.assertTrue(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode());
+//	}
+//
+//	/**
+//	 * Test if registering fails if service is already registered.
+//	 */
+//	@Test
+//	public void testRegisterFail() {
+//		 Response response1 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service4/abbaasda")
+//				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
+//		 Assert.assertTrue(response1.getStatus() == Response.Status.OK.getStatusCode());
+//		 Response response2 = ClientBuilder.newBuilder().build().target("http://localhost:" 
+//				 + getTomcatPort() + "/test/rest/services/service4/abbaasda")
+//				 .request(MediaType.APPLICATION_JSON).put(Entity.text(""));
+//	     Assert.assertTrue(response2.getStatus() == Response.Status.CONFLICT.getStatusCode());
+//	}
+//	
+//	/**
+//	 * Dismantles the embedded Tomcat.
+//	 * @throws Throwable Throws uncaught throwables for test to fail.
+//	 */
+//	@After
+//	public void dismantle() throws Throwable {
+//		if (testTomcat.getServer() != null && testTomcat.getServer().getState() != LifecycleState.DESTROYED) {
+//	        if (testTomcat.getServer().getState() != LifecycleState.STOPPED) {
+//	        	testTomcat.stop();
+//	        }
+//	        testTomcat.destroy();
+//	    }
+//	}
+//	
+//	private int getTomcatPort() {
+//		return testTomcat.getConnector().getLocalPort();
+//	}
 	
 }

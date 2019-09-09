@@ -17,20 +17,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
-import javax.servlet.ServletException;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.netflix.loadbalancer.Server;
 
 import kieker.monitoring.core.controller.MonitoringController;
-
-import org.junit.Assert;
-
+import tools.descartes.teastore.entities.Category;
+import tools.descartes.teastore.entities.Product;
 import tools.descartes.teastore.registryclient.Service;
 import tools.descartes.teastore.registryclient.rest.NonBalancedCRUDOperations;
 import tools.descartes.teastore.registryclient.test.NotFoundServlet;
@@ -38,8 +37,6 @@ import tools.descartes.teastore.registryclient.test.SlowTimeoutingServlet;
 import tools.descartes.teastore.registryclient.test.TestServlet;
 import tools.descartes.teastore.registryclient.test.TimeoutStatusServlet;
 import tools.descartes.teastore.registryclient.util.NotFoundException;
-import tools.descartes.teastore.entities.Category;
-import tools.descartes.teastore.entities.Product;
 
 /**
  * Test the load balancer.
@@ -82,7 +79,7 @@ public class LoadBalancerTest {
 			context.addServletMappingDecoded("/rest/" + TIMEOUTING_ENDPOINT, "timeoutStatusServlet");
 			context.addServletMappingDecoded("/rest/" + TIMEOUTING_ENDPOINT + "/*", "timeoutStatusServlet");
 			testTomcats.add(testTomcat);
-		} catch (ServletException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
