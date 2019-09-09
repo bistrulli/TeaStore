@@ -199,6 +199,7 @@ public final class LoadBalancedCRUDOperations {
 	 */
 	public static <T> List<T> getEntities(Service service, String endpointURI, Class<T> entityClass, int startIndex,
 			int limit) throws NotFoundException, LoadBalancerTimeoutException {
+		
 		return ServiceLoadBalancer.loadBalanceRESTOperation(service, endpointURI, entityClass,
 				client -> NonBalancedCRUDOperations.getEntities(client, startIndex, limit));
 	}
