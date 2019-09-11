@@ -98,6 +98,7 @@ final class EMFManager {
 		boolean useInMemoryDB = false;
 		String url = MYSQL_URL_PREFIX;
 		try {
+			System.out.println((String) new InitialContext().toString());
 			useInMemoryDB = Boolean.parseBoolean((String) new InitialContext().lookup("java:comp/env/inMemoryDB"));
 			if (useInMemoryDB) {
 				LOG.info("Using in-memory development database. Set Java env \"inMemoryDB\" to false to use MariaDB.");
