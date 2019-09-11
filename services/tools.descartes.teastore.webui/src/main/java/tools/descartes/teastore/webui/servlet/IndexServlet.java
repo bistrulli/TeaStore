@@ -56,7 +56,7 @@ public class IndexServlet extends AbstractUIServlet {
 			throws ServletException, IOException, LoadBalancerTimeoutException {
 		
 		//acquire the server thread
-		System.out.println(String.format("Acquired Servelet %d", this.id));
+		System.out.println("Acquired Ui");
 		
 		//checking if the cookie is setted
 		checkforCookie(request, response);
@@ -72,6 +72,7 @@ public class IndexServlet extends AbstractUIServlet {
 		request.getRequestDispatcher("WEB-INF/pages/index.jsp").forward(request, response);
 		
 		//release the server thread
+		System.out.println("Released Ui");
 	}
 
 }
