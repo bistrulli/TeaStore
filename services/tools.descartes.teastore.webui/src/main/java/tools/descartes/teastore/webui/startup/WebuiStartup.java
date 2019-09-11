@@ -53,6 +53,9 @@ public class WebuiStartup implements ServletContextListener {
         GlobalTracer.register(Tracing.init(Service.WEBUI.getServiceName()));
     	ServiceLoadBalancer.preInitializeServiceLoadBalancers(Service.AUTH, Service.IMAGE,
     			Service.PERSISTENCE, Service.RECOMMENDER);
+    	
+    	//i tipi di servizio sono stati tutti gia preregistrati enum nella classe Service, quando si registrano
+    	//fanno partire solo il thread di heartbit per counicare se sono ancora in vita o no
     	RegistryClient.getClient().register(event.getServletContext().getContextPath());
     }
 

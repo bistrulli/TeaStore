@@ -37,12 +37,15 @@ import tools.descartes.teastore.entities.ImageSizePreset;
 public class IndexServlet extends AbstractUIServlet {
 
 	private static final long serialVersionUID = 1L;
+	private static int servletCounter=0;
+	private Integer id=null;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public IndexServlet() {
 		super();
+		id=servletCounter++;
 	}
 
 	/**
@@ -51,15 +54,24 @@ public class IndexServlet extends AbstractUIServlet {
 	@Override
 	protected void handleGETRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, LoadBalancerTimeoutException {
+		
+		//acquire the server thread
+		System.out.println(String.format("Acquired Servelet %d", this.id));
+		
+		//checking if the cookie is setted
 		checkforCookie(request, response);
-		request.setAttribute("CategoryList",
-				LoadBalancedCRUDOperations.getEntities(Service.PERSISTENCE, "categories", Category.class, -1, -1));
-		request.setAttribute("title", "TeaStore Home");
+		//get the category list (Persistence layer calling)
+		request.setAttribute("CategoryList",LoadBalancedCRUDOperations.getEntities(Service.PERSISTENCE, "categories", Category.class, -1, -1));
+		//check if the iser is logged (call the auth service)
 		request.setAttribute("login", LoadBalancedStoreOperations.isLoggedIn(getSessionBlob(request)));
-		request.setAttribute("storeIcon",
-				LoadBalancedImageOperations.getWebImage("icon", ImageSizePreset.ICON.getSize()));
-
+		//get the image from the image service
+		request.setAttribute("storeIcon",LoadBalancedImageOperations.getWebImage("icon", ImageSizePreset.ICON.getSize()));
+		
+		//compute the page (local)
+		request.setAttribute("title", "TeaStore Home");
 		request.getRequestDispatcher("WEB-INF/pages/index.jsp").forward(request, response);
+		
+		//release the server thread
 	}
 
 }
