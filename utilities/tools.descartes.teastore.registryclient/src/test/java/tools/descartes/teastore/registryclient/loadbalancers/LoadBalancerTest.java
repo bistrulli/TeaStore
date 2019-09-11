@@ -45,7 +45,7 @@ import tools.descartes.teastore.registryclient.util.NotFoundException;
  */
 public class LoadBalancerTest {
 	
-	private static final int NUM_SERVERS = 4;
+	private static final int NUM_SERVERS = 2;
 	private static final Service SERVICE = Service.AUTH;
 	private static final String CONTEXT = "/" + SERVICE.getServiceName();
 	private static final String ENDPOINT = "products";
